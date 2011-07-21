@@ -1,0 +1,14 @@
+Zooms full pages.
+ 
+To use:
+Put an iframe on the page, in some container,
+and do:
+
+iframe.one("load", function() {
+
+	iframe.zoom({
+		ratio: 0.4,
+		previewWidth: 431,
+		previewHeight: 925
+	});
+});
