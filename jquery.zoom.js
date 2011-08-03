@@ -119,12 +119,12 @@
 				},
 				calcChrome = function () {
 					
-					// The Chrome way (Since version 10.x) to do transform scale
+					// When using zoom instead of scale
 					if (settings.webkitZoom) {
 						val.height = "100%";
 						val.width = "100%";
 					} else {
-						// for use with transform-scale
+						// The Chrome way (Since version 10.x) to do transform scale
 						val = {
 							height	: val.height / ratio,
 							width	: ((1 / (ratio * ratio)) * 100) + "%",
