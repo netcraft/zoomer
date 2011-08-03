@@ -59,7 +59,7 @@
 			ie9: $.browser.msie && version === 9,			
 			chrome: ($.browser.webkit || $.browser.safari) && navigator.userAgent.indexOf("Chrome") != -1 && version > 534.14
 		};
-		// Safari's not Chrome..
+		// Safari's and Chrome's Webkit is not the same
 		browser.safari = $.browser.safari && !browser.chrome;		
 		if (browser.safari) {
 			// Safari's zoom looks ugly..
