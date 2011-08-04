@@ -14,7 +14,7 @@
  *
  *	iframe.one("load", function() {
  *									
- *		iframe.zoom({
+ *		iframe.zoomer({
  *			ratio: 0.4,
  *			previewWidth: 431,
  *			previewHeight: 925
@@ -28,7 +28,7 @@
 
 (function ($) {
 	
-	$.fn.zoom = function (options) {
+	$.fn.zoomer = function (options) {
 
         // Defaults:
         var settings = {

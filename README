@@ -6,7 +6,7 @@ and do:
 
 iframe.one("load", function() {
 
-	iframe.zoom({
+	iframe.zoomer({
 		ratio: 0.4,
 		previewWidth: 431,
 		previewHeight: 925
