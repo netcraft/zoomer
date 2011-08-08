@@ -1,5 +1,7 @@
+Dual licensed under the MIT and GPL licenses.
+
 Zooms full pages.
- 
+
 To use:
 Put an iframe on the page, in some container,
 and do:

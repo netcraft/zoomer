@@ -6,6 +6,11 @@
  * Company: netcraft
  * Site: http://netcraft.co.il
  *
+ * Copyright 2011, Netcraft
+ * Dual licensed under the MIT and GPL licenses:
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.gnu.org/licenses/gpl.html
+ *
  * Zooms full pages.
  *
  * To use:
