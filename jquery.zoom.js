@@ -47,8 +47,15 @@
 			contentHeight: null,
 
 			// Webkit also implements Microsoft's zoom,
-			// so you have an option to use it instead of the transform scale
+			// so you have an option to use it instead of the transform scale.
+			// Doesn't work for Cross-Domain preview (fallbacks to scale).
 			webkitZoom: true,
+			
+			// Unfortunately Chromes' mood changes between versions.
+			// Fortunately (hopefully) we know what to do when it does.
+			// If the preview looks weird in Chrome just change this to anything else and pray.
+			// If it still looks weird you didn't guess it right. Right.
+			chromesMood: ":)",
 			
 			className: "zoom",
 			container: null
@@ -74,12 +81,11 @@
 		// Check if we can access iframe contents for getting its height
 		function canAccess (iframe) {
 
-			var ret = false;
+			var height;
 			try {
-				iframe.contents().height();
-				ret = true;
+				height = iframe.contents().height();				
 			} catch (e) {}
-			return ret;
+			return height === 0 || !!height;
 		}
 
 		function initContainer (iframe) {
@@ -124,15 +130,18 @@
 				},
 				calcChrome = function () {
 					
+					var mood;
+					
 					// When using zoom instead of scale
-					if (settings.webkitZoom) {
+					if (canAccess && settings.webkitZoom) {
 						val.height = "100%";
 						val.width = "100%";
 					} else {
-						// The Chrome way (Since version 10.x) to do transform scale
+						// Chromes'	(moody) way to do transform scale
+						mood = settings.chromesMood === ":)" ? ratio : ratio * ratio;
 						val = {
 							height	: val.height / ratio,
-							width	: ((1 / (ratio * ratio)) * 100) + "%",
+							width	: ((1 / mood) * 100) + "%",
 				
 							// Calculate the offsets, redundant when using transform-origin
 							offsetTop	: val.offsetTop / ratio,
@@ -186,7 +195,7 @@
 					iframe.css(css);
 				},
 				setChrome = function () {
-					if (settings.webkitZoom) {
+					if (canAccess && settings.webkitZoom) {
 						// The width/height should be applied to the iframe
 						iframe.css(css);
 						// But the zoom to the iframes root element
@@ -239,10 +248,14 @@
 			if (options) {
                 $.extend(settings, options);
             }
-					
+
 			var iframe = $(this);
+			
+			//Check cross-domain and keep result
+			canAccess = canAccess(iframe);
+			
 			// Get the content height
-			if (!settings.contentHeight && canAccess(iframe)) {
+			if (!settings.contentHeight && canAccess) {
 				settings.contentHeight = iframe.contents().height();
 			}
 			if (settings.contentHeight) {
