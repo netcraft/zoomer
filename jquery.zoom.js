@@ -57,6 +57,10 @@
 			// If it still looks weird you didn't guess it right. Right.
 			chromesMood: ":)",
 			
+			// Gives the option to force direction:
+			// affects offsets directions (margin and transform-origin)
+			forceDirection: null, // "ltr" || "rtl"			
+			
 			className: "zoom",
 			container: null
         };
@@ -98,7 +102,8 @@
 				"width": settings.previewWidth,
 				"height": settings.previewHeight,
 				"overflow": "hidden"
-			});			
+			});
+			settings.container = container;
 		}
 
 		function zoom (iframe) {
@@ -186,12 +191,24 @@
 					"height": values.height
 				},
 				ratio = settings.ratio,
+				direction = function () {
+					var dir = settings.forceDirection || settings.container.css("direction"),
+						rtl = dir === "rtl";
+					return {
+						getProperty: function (prop) {
+							var d = rtl ? "right" : "left";
+							return prop + "-" + d;
+						},
+						sign: rtl ? -1 : 1,
+						transformOrigin: rtl ? "100% 0" : "0 0"
+					}
+				}(),				
 				setIE = function () {
 					$.extend(css, {
-						"zoom": ratio,
-						"margin-left": values.offsetLeft + "%",
+						"zoom": ratio,						
 						"margin-top": values.offsetTop
 					});
+					css[direction.getProperty("margin")] = (direction.sign * values.offsetLeft) + "%",
 					iframe.css(css);
 				},
 				setChrome = function () {
@@ -203,7 +220,7 @@
 					} else {
 						$.extend(css ,{
 							"-webkit-transform": "scale(" + ratio + ")",
-							"-webkit-transform-origin": "0 0"
+							"-webkit-transform-origin": direction.transformOrigin
 						});
 						iframe.css(css);
 					}
@@ -211,17 +228,17 @@
 				setStandard = function () {
 					$.extend(css ,{
 						"-moz-transform": "scale(" + ratio + ")",
-						"-moz-transform-origin": "0 0",
+						"-moz-transform-origin": direction.transformOrigin,
 						"-o-transform": "scale(" + ratio + ")",
-						"-o-transform-origin": "0 0",
+						"-o-transform-origin": direction.transformOrigin,
 						"-webkit-transform": "scale(" + ratio + ")",
-						"-webkit-transform-origin": "0 0",
+						"-webkit-transform-origin": direction.transformOrigin,
 						"transform": "scale(" + ratio + ")",
-						"transform-origin": "0 0"
+						"transform-origin": direction.transformOrigin
 					});
 					iframe.css(css);
 				};
-
+			
 			if (browser.ie) { setIE(); }
 			else if (browser.chrome) { setChrome(); } 
 			else { setStandard(); }			
