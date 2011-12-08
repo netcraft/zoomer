@@ -45,6 +45,10 @@
 			// An option to manually set height for a cross-domain iframe
 			// cause we can't read it with js
 			contentHeight: null,
+			
+			// A fallback height for when we can't access the iframe
+			// and no explicit contentHeight is provided
+			defaultHeight: 1000,
 
 			// Webkit also implements Microsoft's zoom,
 			// so you have an option to use it instead of the transform scale.
@@ -95,7 +99,7 @@
 		function initContainer (iframe) {
 
 			var container = settings.container ? 
-					iframe.closest(settings.container) : iframe.parent();
+				iframe.closest(settings.container) : iframe.parent();
 			
 			container.addClass(settings.className);
 			container.css({
@@ -275,11 +279,10 @@
 			if (!settings.contentHeight && canAccess) {
 				settings.contentHeight = iframe.contents().height();
 			}
-			if (settings.contentHeight) {
-				initContainer(iframe);
-				zoom(iframe);
-				ie7wake(iframe);
-			}
+			settings.contentHeight = settings.contentHeight || settings.defaultHeight;				
+			initContainer(iframe);
+			zoom(iframe);
+			ie7wake(iframe);
 
         }); // return
 
